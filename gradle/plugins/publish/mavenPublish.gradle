@@ -1,0 +1,67 @@
+apply plugin: "maven-publish"
+
+apply plugin: "signing"
+
+/*
+
+signing {
+    sign publishing.publications.mavenJava
+}
+*/
+
+
+
+publishing {
+    publications {
+        myArtifact(MavenPublication) {
+            from components.java
+            afterEvaluate {
+//                groupId = 'org.gradle.sample' // If not given, default to project/module group Id
+//                artifactId = jar.baseName
+//                artifactId = 'admin-sample' // If not given, default to project/module artifact Id which is same as jar.baseName
+//                version = '1.1' // If not given, default to project/module version
+            }
+
+            pom {
+                name = 'My Library'
+                description = 'A concise description of my library'
+                url = 'http://www.example.com/library'
+                organization {
+                    name = "Organization Name"
+                    url = "http://www.apache.org/organization/LICENSE-2.0.txt"
+                }
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'johnd'
+                        name = 'John Doe'
+                        email = 'john.doe@example.com'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://example.com/my-library.git'
+                    developerConnection = 'scm:git:ssh://example.com/my-library.git'
+                    url = 'http://example.com/my-library/'
+                }
+            }
+
+        }
+    }
+
+    repositories {
+        maven {
+            name = "MyArtifact"
+            def releasesRepoUrl = "$buildDir/repos/releases "
+            def snapshotsRepoUrl = "$buildDir/repos/snapshots"
+//            url = project.hasProperty('release') ? releasesRepoUrl : snapshotsRepoUrl
+            url = version.endsWith('SNAPSHOT') ? releasesRepoUrl : snapshotsRepoUrl
+        }
+    }
+}
+
+

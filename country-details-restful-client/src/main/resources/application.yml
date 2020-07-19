@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: country-details-restful-client
+
+server:
+  port: 8100
+
+
+
+eureka:
+  instance:
+    leaseRenewalIntervalInSeconds: 1
+    leaseExpirationDurationInSeconds: 5
+  client:
+    #    serviceUrl:
+    #      defaultZone: http://127.0.0.1:8761/eureka/
+    healthcheck:
+      enabled: true
+    lease:
+      duration: 5
+
+

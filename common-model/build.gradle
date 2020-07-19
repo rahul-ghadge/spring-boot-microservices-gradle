@@ -1,0 +1,14 @@
+
+//group 'com.arya.microservices.server'
+
+bootJar {
+    enabled = false
+}
+jar {
+    enabled = true
+}
+
+dependencies {
+    compile('org.projectlombok:lombok')
+    annotationProcessor 'org.projectlombok:lombok'
+}

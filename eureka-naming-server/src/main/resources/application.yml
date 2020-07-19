@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: eureka-naming-server
+
+server:
+  port: 8761
+
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+
+
+# ---------------------------------------------------------
+# API reference
+# ---------------------------------------------------------
+
+# Documentation for country API
+# https://app.swaggerhub.com/apis/K2ANZ/GetCountries/1.0.0
+
+# https://restcountries.eu/rest/v2/all
+# https://restcountries.eu/rest/v2/name/bharat
+# https://restcountries.eu/rest/v2/name/japan

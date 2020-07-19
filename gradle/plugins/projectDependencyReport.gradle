@@ -1,0 +1,18 @@
+/*
+You can render the dependency tree with the command
+    $ ./gradlew dependencies
+Rendering the dependency report for a custom configuration
+    $ gradle -q dependencies --configuration compile
+For more information check the section 11.6.4 Listing project dependencies in the online user guide:-
+https://docs.gradle.org/current/userguide/userguide_single.html#sec:listing_dependencies
+
+
+******************************************************
+If you find it hard to navigate console output of gradle dependencies, you can add the Project reports plugin:
+
+apply plugin: 'project-report'
+And generate a HTML report using:
+    $ ./gradlew htmlDependencyReport
+Report can normally be found in build/reports/project/dependencies/index.html
+*/
+apply plugin: 'project-report'
