@@ -1,4 +1,4 @@
-rootProject.name = 'spring-boot-microservices'
+rootProject.name = 'spring-boot-microservices-gradle'
 include 'eureka-naming-server'
 include 'country-details-restful-client'
 include 'common-model'
