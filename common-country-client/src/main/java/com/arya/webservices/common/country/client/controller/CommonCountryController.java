@@ -2,11 +2,13 @@ package com.arya.webservices.common.country.client.controller;
 
 
 import com.arya.microservices.common.model.CountryDetails;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -17,10 +19,11 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
+@RefreshScope
 public class CommonCountryController {
 
     private static final Logger logger = LoggerFactory.getLogger(CommonCountryController.class);
@@ -30,15 +33,13 @@ public class CommonCountryController {
 
 
     @Autowired
-    private Environment environment;
-
-    @Autowired
     private RestTemplate restTemplate;
 
     @Autowired
     private WebClient.Builder webClientBuilder;
 
 
+    
     @GetMapping({"/", "/{country}"})
     public ResponseEntity<List<CountryDetails>> getCountryData(@PathVariable(required = false) String country) {
 
@@ -62,41 +63,50 @@ public class CommonCountryController {
                     countryDetailsResponse.addAll(getCountryDetailsUsingWebClient(c.getCurrencies().get(0).getCode()));
                 });
             }
-//                    !CollectionUtils.isEmpty(countryDetails.getCurrencies())) {
-//                countryDetails = getCountryDetailsUsingWebClient(countryDetails.getCurrencies().get(0).getCode());
-
-//                if (countryDetailsResponse.getStatusCode() == HttpStatus.OK)
-//                    countryDetails = countryDetailsResponse.getBody();
-//                else
-//                    countryDetails.setMessage("Something wrong happened with country details API..!");
-//            } else {
-//                countryDetails.setMessage("Something wrong happened with country currency API..!");
-//            }
-
-//        Call country service by by getting API endpoint from EurekaClient
-//        InstanceInfo instanceInfo = client.getNextServerFromEureka("country-client", false);
-//        String apiUrl = instanceInfo.getHomePageUrl();
-//        Object response = getServiceUsingRestTemplate(apiUrl, country);
-
         System.out.println("Response Received from country client " + countryDetailsResponse);
 
         return ResponseEntity.ok(countryDetailsResponse);
-        }
+    }
 
-    private List<CountryDetails> getCountryDetailsUsingWebClient(String code) {
-        return (List<CountryDetails>) webClientBuilder.build().get()
+    
+    
+    @SuppressWarnings("unchecked")
+//     Circuit breaker
+    @HystrixCommand(fallbackMethod = "getCountryDetailsFallback",
+          ignoreExceptions = { RuntimeException.class },
+          commandProperties = {
+                  @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")
+    })
+	private List<CountryDetails> getCountryDetailsUsingWebClient(String code) {
+        return webClientBuilder.build().get()
                 .uri(COUNTRY_CURRENCY_API + code)
                 .retrieve()
-                .bodyToMono(Object.class)
+                .bodyToMono(List.class)
                 .block();
     }
 
 
-    private List<CountryDetails> getCountryDetailsUsingRestTemplate(String country) {
-        return (List<CountryDetails>) restTemplate
-                .getForObject(COUNTRY_DETAILS_API + country, Object.class);
+    
+    @SuppressWarnings("unchecked")
+//  Circuit breaker
+	@HystrixCommand(fallbackMethod = "getCountryDetailsFallback", 
+	ignoreExceptions = { RuntimeException.class }, 
+		commandProperties = {
+					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000") 
+	})
+	private List<CountryDetails> getCountryDetailsUsingRestTemplate(String country) {
+        return restTemplate
+                .getForObject(COUNTRY_DETAILS_API + country, List.class);
 //                .exchange(url, HttpMethod.GET, null,
 //                        new ParameterizedTypeReference<String>() {}, country)
 //                .getBody();
     }
+    
+    
+    public List<CountryDetails> getCountryDetailsFallback() {
+    	CountryDetails countryDetails = new CountryDetails();
+    	countryDetails.setMessage("Something happend wrong...!");
+    	return Arrays.asList(countryDetails);
+    }    
+    
 }

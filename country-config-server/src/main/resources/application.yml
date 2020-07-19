@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: country-config-server
+
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/rahul-ghadge/properties-repository.git
+
+server:
+  port: 8888
+
+
