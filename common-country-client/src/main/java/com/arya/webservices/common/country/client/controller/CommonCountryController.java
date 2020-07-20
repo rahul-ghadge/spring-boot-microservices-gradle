@@ -22,8 +22,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+
 
 @RestController
 @RefreshScope
@@ -56,13 +56,13 @@ public class CommonCountryController {
         List<CountryDetails> countryDetailsResponse = new ArrayList<>();
 
 
-            if (null != countryDetails && !CollectionUtils.isEmpty(countryDetails)) {
-                countryDetails.stream()
-                        .map(c ->
-                                getCountryDetailsUsingWebClient(
-                                		c.getCurrencies().get(0).getCode())
-                                				.stream()
-                                				.map(cd -> countryDetailsResponse.add(cd)));
+        if (null != countryDetails && !CollectionUtils.isEmpty(countryDetails)) {
+            countryDetails.stream()
+                     .map(c ->
+                             getCountryDetailsUsingWebClient(
+                                 c.getCurrencies().get(0).getCode())
+                                			.stream()
+                                			.map(cd -> countryDetailsResponse.add(cd)));
 //                        .collect(Collectors.toList());
 
 //                countryDetails.forEach(c -> {
@@ -78,8 +78,7 @@ public class CommonCountryController {
     
     @SuppressWarnings("unchecked")
 //     Circuit breaker
-    @HystrixCommand(fallbackMethod = "getCountryDetailsFallback",
-          ignoreExceptions = { RuntimeException.class },
+    @HystrixCommand(fallbackMethod = "getCountryDetailsFallback", //ignoreExceptions = { RuntimeException.class },
           commandProperties = {
                   @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")
     })
@@ -95,8 +94,7 @@ public class CommonCountryController {
     
     @SuppressWarnings("unchecked")
 //  Circuit breaker
-	@HystrixCommand(fallbackMethod = "getCountryDetailsFallback", 
-	ignoreExceptions = { RuntimeException.class }, 
+	@HystrixCommand(fallbackMethod = "getCountryDetailsFallback", //ignoreExceptions = { RuntimeException.class }, 
 		commandProperties = {
 					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000") 
 	})
