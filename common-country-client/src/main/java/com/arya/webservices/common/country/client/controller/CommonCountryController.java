@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -21,6 +22,8 @@ import org.springframework.web.reactive.function.client.WebClient;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RefreshScope
@@ -40,13 +43,13 @@ public class CommonCountryController {
 
 
     
-    @GetMapping({"/", "/{country}"})
+    @GetMapping(value = {"/", "/{country}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CountryDetails>> getCountryData(@PathVariable(required = false) String country) {
 
         if (StringUtils.isEmpty(country))
             country = "bharat";
 
-        System.out.println("Getting country details for " + country);
+        logger.info("Getting country details for " + country);
 
         // Call country service by hardcoding API endpoint
         List<CountryDetails> countryDetails = getCountryDetailsUsingRestTemplate(country);
@@ -54,16 +57,19 @@ public class CommonCountryController {
 
 
             if (null != countryDetails && !CollectionUtils.isEmpty(countryDetails)) {
-//                countryDetails.stream()
-//                        .map(c ->
-//                                getCountryDetailsUsingWebClient(c.getCurrencies().get(0).getCode()))
+                countryDetails.stream()
+                        .map(c ->
+                                getCountryDetailsUsingWebClient(
+                                		c.getCurrencies().get(0).getCode())
+                                				.stream()
+                                				.map(cd -> countryDetailsResponse.add(cd)));
 //                        .collect(Collectors.toList());
 
-                countryDetails.forEach(c -> {
-                    countryDetailsResponse.addAll(getCountryDetailsUsingWebClient(c.getCurrencies().get(0).getCode()));
-                });
+//                countryDetails.forEach(c -> {
+//                    countryDetailsResponse.addAll(getCountryDetailsUsingWebClient(c.getCurrencies().get(0).getCode()));
+//                });
             }
-        System.out.println("Response Received from country client " + countryDetailsResponse);
+        logger.info("Response Received from country client " + countryDetailsResponse);
 
         return ResponseEntity.ok(countryDetailsResponse);
     }

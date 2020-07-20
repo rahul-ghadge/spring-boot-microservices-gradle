@@ -32,7 +32,8 @@ public class CountryDetailsController {
     private RestTemplate restTemplate;
 
 
-    @GetMapping(value = "/name/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @SuppressWarnings("unchecked")
+	@GetMapping(value = "/name/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
     public List<CountryDetails> getCountryData(@PathVariable String country) {
 
         logger.info("Fetching data from country : " + country);
@@ -41,7 +42,11 @@ public class CountryDetailsController {
         logger.info("*********************************************\n");
 
         logger.info("Country Details API :: " + COUNTRY_DETAILS_API + country);
-        return (List<CountryDetails>) restTemplate.getForObject(COUNTRY_DETAILS_API + country, Object.class);
+        
+        List<CountryDetails> countryDetails = restTemplate.getForObject(COUNTRY_DETAILS_API + country, List.class);
+        logger.info("Country Details API Response :: " + countryDetails);
+        
+        return countryDetails;
 
     }
 }
