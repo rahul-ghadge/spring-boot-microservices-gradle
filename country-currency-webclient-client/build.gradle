@@ -20,5 +20,5 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
 
-    compile project(':common-model')
+	compileOnly("org.springframework.boot:spring-boot-devtools")
 }

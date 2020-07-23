@@ -1,6 +1,7 @@
 package com.arya.webservices.common.country.client.controller;
 
 
+import com.arya.microservices.common.model.CountryCurrency;
 import com.arya.microservices.common.model.CountryDetails;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -21,7 +22,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 
 
@@ -43,35 +46,59 @@ public class CommonCountryController {
 
 
     
-    @GetMapping(value = {"/", "/{country}"}, produces = MediaType.APPLICATION_JSON_VALUE)
+    @SuppressWarnings("unchecked")
+	@GetMapping(value = {"/", "/{country}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CountryDetails>> getCountryData(@PathVariable(required = false) String country) {
 
         if (StringUtils.isEmpty(country))
             country = "bharat";
 
         logger.info("Getting country details for " + country);
+        final String countryName = country;
 
         // Call country service by hardcoding API endpoint
-        List<CountryDetails> countryDetails = getCountryDetailsUsingRestTemplate(country);
-        List<CountryDetails> countryDetailsResponse = new ArrayList<>();
+        List<Map<String, Object>> countryDetails = getCountryDetailsUsingRestTemplate(countryName);
+        logger.info("Response from Country Details :: {}", countryDetails);
+        List<Map<String, Object>> countryDetailsResponse = new ArrayList<>();
+        List<CountryDetails> countryDetailsList = new ArrayList<>();
 
 
-        if (null != countryDetails && !CollectionUtils.isEmpty(countryDetails)) {
-            countryDetails.stream()
-                     .map(c ->
-                             getCountryDetailsUsingWebClient(
-                                 c.getCurrencies().get(0).getCode())
-                                			.stream()
-                                			.map(cd -> countryDetailsResponse.add(cd)));
-//                        .collect(Collectors.toList());
-
-//                countryDetails.forEach(c -> {
-//                    countryDetailsResponse.addAll(getCountryDetailsUsingWebClient(c.getCurrencies().get(0).getCode()));
-//                });
+        if (!CollectionUtils.isEmpty(countryDetails)) {
+        	
+        	countryDetails.forEach(map -> 
+            		map.keySet().stream()
+            		.filter(key -> countryName.equalsIgnoreCase((String) map.get("name")))
+             		.filter(key -> key.equals("currencies"))
+             		.filter(key -> !CollectionUtils.isEmpty((Collection<?>) (map.get("currencies"))))
+             		.forEach(key -> {
+             		System.out.println(key);
+             		countryDetailsResponse.addAll(
+             				getCountryDetailsUsingWebClient( 
+             						((List<Map<String, Object>>) map.get(key)).get(0).get("code").toString()) 
+             				);
+             		}
+             		)
+           		 );        	
             }
-        logger.info("Response Received from country client " + countryDetailsResponse);
+        
+        logger.info("Final response from common country client :: {}", countryDetailsResponse);
+      	
+        
+        countryDetails.stream()
+		.filter(map -> countryName.equalsIgnoreCase((String) map.get("name")))        
+        .forEach(map -> countryDetailsList.add(new CountryDetails(
+    					map.get("name").toString(),
+    					map.get("capital").toString(),
+    					map.get("region").toString(),
+    					map.get("subregion").toString(),
+    					Long.valueOf(map.get("population").toString()),
+    					""+ map.get("description"),
+    					(List<CountryCurrency>) map.get("currencies"),
+    					200,
+    					"Country details fetched successfully"
+    					)));
 
-        return ResponseEntity.ok(countryDetailsResponse);
+		return ResponseEntity.ok(countryDetailsList);
     }
 
     
@@ -82,7 +109,7 @@ public class CommonCountryController {
           commandProperties = {
                   @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")
     })
-	private List<CountryDetails> getCountryDetailsUsingWebClient(String code) {
+	private List<Map<String, Object>> getCountryDetailsUsingWebClient(String code) {
         return webClientBuilder.build().get()
                 .uri(COUNTRY_CURRENCY_API + code)
                 .retrieve()
@@ -98,7 +125,7 @@ public class CommonCountryController {
 		commandProperties = {
 					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000") 
 	})
-	private List<CountryDetails> getCountryDetailsUsingRestTemplate(String country) {
+	private List<Map<String, Object>> getCountryDetailsUsingRestTemplate(String country) {
         return restTemplate
                 .getForObject(COUNTRY_DETAILS_API + country, List.class);
 //                .exchange(url, HttpMethod.GET, null,
@@ -108,9 +135,11 @@ public class CommonCountryController {
     
     
     public List<CountryDetails> getCountryDetailsFallback() {
-    	CountryDetails countryDetails = new CountryDetails();
-    	countryDetails.setMessage("Something happend wrong...!");
-    	return Arrays.asList(countryDetails);
-    }    
+    	return Arrays.asList(
+    			new CountryDetails()
+    			.setMessage("Something happend wrong...!")
+    			.setStatus(500)
+    		);
+    }   
     
 }

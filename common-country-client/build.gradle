@@ -20,6 +20,8 @@ dependencies {
     testImplementation('org.springframework.boot:spring-boot-starter-test') {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
+    
+    compileOnly("org.springframework.boot:spring-boot-devtools")
 
     compile project(':common-model')
 }

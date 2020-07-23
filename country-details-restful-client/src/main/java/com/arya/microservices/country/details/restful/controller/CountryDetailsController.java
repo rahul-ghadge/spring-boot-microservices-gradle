@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class CountryDetailsController {
@@ -30,21 +31,24 @@ public class CountryDetailsController {
 
     @Autowired
     private RestTemplate restTemplate;
+    
+    List<Map<String, Object>> countryDetails; 
 
 
     @SuppressWarnings("unchecked")
 	@GetMapping(value = "/name/{country}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<CountryDetails> getCountryData(@PathVariable String country) {
+    public List<Map<String, Object>> getCountryData(@PathVariable String country) {
 
-        logger.info("Fetching data from country : " + country);
-        logger.info("\n\n*********************************************");
-        logger.info("Server port :: " + environment.getProperty("local.server.port"));
-        logger.info("*********************************************\n");
-
-        logger.info("Country Details API :: " + COUNTRY_DETAILS_API + country);
+        logger.info("Fetching data from currency code : {}", country);
+        logger.info("Server port :: {}", environment.getProperty("local.server.port"));
+        logger.info("Country Currency API :: {}{}", COUNTRY_DETAILS_API, country);
         
-        List<CountryDetails> countryDetails = restTemplate.getForObject(COUNTRY_DETAILS_API + country, List.class);
-        logger.info("Country Details API Response :: " + countryDetails);
+        if ("favicon.ico".equals(country)) {
+			return countryDetails;
+		} else {
+			countryDetails = restTemplate.getForObject(COUNTRY_DETAILS_API + country, List.class);
+		}
+        logger.info("Country Details API Response :: {}", countryDetails);
         
         return countryDetails;
 
