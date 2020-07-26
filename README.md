@@ -1,7 +1,13 @@
 # Spring Boot Micro Services with Gradle
 
-RESTful web services are the first step to developing great microservices. Spring Boot, in combination with Spring Web MVC (also called Spring REST) makes it easy to develop RESTful web services.
+RESTful web services are the first step to developing great microservices. Spring Boot,
+in combination with Spring Web MVC (also called Spring REST) makes it easy to develop RESTful web services.  
+Here we will learn the basics of Microservices from scratch and will understand how to implement microservices using Spring Cloud.
 
+### APIs used to get country details
+> https://restcountries.eu/rest/v2/name/India - Get country details by name  
+> https://restcountries.eu/rest/v2/name/japan - Get country details by name  
+> https://restcountries.eu/rest/v2/currency/INR -  Get country details by currency
 
 ## You will learn
 - You will be able to develop and design RESTful web services
