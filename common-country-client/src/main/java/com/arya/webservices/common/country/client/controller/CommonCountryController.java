@@ -6,6 +6,7 @@ import com.arya.microservices.common.model.CountryDetails;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
+import com.netflix.hystrix.contrib.javanica.conf.HystrixPropertiesManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 
 
 @RestController
@@ -70,17 +66,14 @@ public class CommonCountryController {
             		.filter(key -> countryName.equalsIgnoreCase((String) map.get("name")))
              		.filter(key -> key.equals("currencies"))
              		.filter(key -> !CollectionUtils.isEmpty((Collection<?>) (map.get("currencies"))))
-             		.forEach(key -> {
-             		System.out.println(key);
+             		.forEach(key -> 
              		countryDetailsResponse.addAll(
-             				getCountryDetailsUsingWebClient( 
-             						((List<Map<String, Object>>) map.get(key)).get(0).get("code").toString()) 
-             				);
-             		}
-             		)
+             				getCountryDetailsUsingWebClient(
+             						((List<Map<String, Object>>) map.get(key)).get(0).get("code").toString())
+             				)
+					)
            		 );        	
             }
-        
         logger.info("Final response from common country client :: {}", countryDetailsResponse);
       	
         
@@ -105,27 +98,30 @@ public class CommonCountryController {
     
     @SuppressWarnings("unchecked")
 //     Circuit breaker
-    @HystrixCommand(fallbackMethod = "getCountryDetailsFallback", //ignoreExceptions = { RuntimeException.class },
-          commandProperties = {
-                  @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")
+    @HystrixCommand(fallbackMethod = "getCountryCurrencyFallback", //ignoreExceptions = { RuntimeException.class },
+            commandProperties = {
+                    @HystrixProperty(name = HystrixPropertiesManager.EXECUTION_ISOLATION_THREAD_TIMEOUT_IN_MILLISECONDS, value = "2000"),
+					@HystrixProperty(name = HystrixPropertiesManager.EXECUTION_TIMEOUT_ENABLED, value = "true")
     })
-	private List<Map<String, Object>> getCountryDetailsUsingWebClient(String code) {
-        return webClientBuilder.build().get()
-                .uri(COUNTRY_CURRENCY_API + code)
-                .retrieve()
-                .bodyToMono(List.class)
-                .block();
+	public List<Map<String, Object>> getCountryDetailsUsingWebClient(String code) {
+
+		return  webClientBuilder.build().get()
+				.uri(COUNTRY_CURRENCY_API + code)
+				.retrieve()
+				.bodyToMono(List.class)
+				.block();
     }
 
 
     
     @SuppressWarnings("unchecked")
 //  Circuit breaker
-	@HystrixCommand(fallbackMethod = "getCountryDetailsFallback", //ignoreExceptions = { RuntimeException.class }, 
-		commandProperties = {
-					@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000") 
+	@HystrixCommand(fallbackMethod = "getCountryDetailsFallback", //ignoreExceptions = { RuntimeException.class },
+		    commandProperties = {
+					@HystrixProperty(name = HystrixPropertiesManager.EXECUTION_ISOLATION_THREAD_TIMEOUT_IN_MILLISECONDS, value = "2000"),
+					@HystrixProperty(name = HystrixPropertiesManager.EXECUTION_TIMEOUT_ENABLED, value = "true")
 	})
-	private List<Map<String, Object>> getCountryDetailsUsingRestTemplate(String country) {
+	public List<Map<String, Object>> getCountryDetailsUsingRestTemplate(String country) {
         return restTemplate
                 .getForObject(COUNTRY_DETAILS_API + country, List.class);
 //                .exchange(url, HttpMethod.GET, null,
@@ -134,12 +130,17 @@ public class CommonCountryController {
     }
     
     
-    public List<CountryDetails> getCountryDetailsFallback() {
-    	return Arrays.asList(
-    			new CountryDetails()
-    			.setMessage("Something happend wrong...!")
-    			.setStatus(500)
-    		);
-    }   
+    public List<Map<String, Object>> getCountryDetailsFallback(String country) {
+		Map<String, Object> fallbackMap = new HashMap<>();
+		fallbackMap.put("message", "Something happened wrong...!");
+    	return Arrays.asList(fallbackMap);
+    }
+
+
+	public List<Map<String, Object>> getCountryCurrencyFallback(String code) {
+		Map<String, Object> fallbackMap = new HashMap<>();
+		fallbackMap.put("message", "Something happened wrong...!");
+		return Arrays.asList(fallbackMap);
+	}
     
 }
