@@ -36,9 +36,9 @@ Here we will learn the basics of Microservices from scratch and will understand 
 | Name                                        | Port                 | Description  |
 | ------------------------------------------- |:-------------:       | ---------:|
 | spring-boot-microservices-gradle(root)      | (Root/Parent module) |    |
-| common-country-client                       | 8080                 |    |
+| common-country-client                       | 8090                 |    |
 | common-model                                |                      |    |
-| country-config-server                       | 8888                 |    |
+| country-config-server                       | 8888 (**optional**)                |    |
 | country-currency-webclient-client           | 8200, 8201,...       |    |
 | country-details-restful-client              | 8100, 8101,...       |    |
 | eureka-naming-server                        | 8761                 |    |
@@ -48,18 +48,18 @@ Here we will learn the basics of Microservices from scratch and will understand 
 
 ## Order to Run the Applications
 1. **eureka-naming-server**
-2. **country-config-server**
+2. **country-config-server** (**optional**)
 3. **country-currency-webclient-client**
 4. **country-details-restful-client**
 5. **common-country-client**
-> Under each module you will find ``**Aplication.java`` class, run ``main()`` method from that class
+> Under each module you will find ``*Aplication.java`` class, run ``main()`` method from that class
 
 
 ## API Endpoints
 | Name                                        | URL                                             | 
 | ------------------------------------------- |:---------------------------------------------  | 
 | eureka-naming-server                        | http://localhost:8761                           | 
-| common-country-client                       | http://localhost:8080/india                     | 
+| common-country-client                       | http://localhost:8090/india                     | 
 | country-config-server                       | http://localhost:8888                           | 
 | country-currency-webclient-client           | http://localhost:8200, http://localhost:8201,...| 
 | country-details-restful-client              | http://localhost:8100, http://localhost:8101,...| 
