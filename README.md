@@ -16,6 +16,7 @@ Here we will learn the basics of Microservices from scratch and will understand 
 - You will learn how to implement Circuit breaker for fault tolerance using **Hystrix** 
 - Consume Third party API using **RestTemplate** and **WebClient**
 - **Load Balance** using **Ribbon** for RestTemplate and WebClient
+- You will learn declarative web service HTTP client with the help of *Feign*
 - You will be able to consume and communicate other RESTful web services using **Ribbon** and **Feign**
 - You will understand how to monitor RESTful Services with **Spring Boot Actuator**
 - You will understand the best practices in designing RESTful web services
@@ -38,10 +39,11 @@ Here we will learn the basics of Microservices from scratch and will understand 
 | spring-boot-microservices-gradle(root)      | (Root/Parent module) |    |
 | common-country-client                       | 8090                 |    |
 | common-model                                |                      |    |
-| country-config-server                       | 8888 (**optional**)                |    |
+| country-config-server                       | 8888 (**optional**)  |    |
 | country-currency-webclient-client           | 8200, 8201,...       |    |
 | country-details-restful-client              | 8100, 8101,...       |    |
 | eureka-naming-server                        | 8761                 |    |
+| ribbon-feign-client                         | 8088                 |    |
 > You can dynamically run multiple instances for ``restful-client`` and ``webclient-client`` applications by changing ports as shown above  
 > Each instance will get registered under ``Eureka Server`` and urls will be mapped respectively.
 
@@ -52,14 +54,16 @@ Here we will learn the basics of Microservices from scratch and will understand 
 3. **country-currency-webclient-client**
 4. **country-details-restful-client**
 5. **common-country-client**
+6. **ribbon-feign-client**
 > Under each module you will find ``*Aplication.java`` class, run ``main()`` method from that class
 
 
 ## API Endpoints
 | Name                                        | URL                                             | 
-| ------------------------------------------- |:---------------------------------------------  | 
+| ------------------------------------------- |:---------------------------------------------   | 
 | eureka-naming-server                        | http://localhost:8761                           | 
 | common-country-client                       | http://localhost:8090/india                     | 
 | country-config-server                       | http://localhost:8888                           | 
 | country-currency-webclient-client           | http://localhost:8200, http://localhost:8201,...| 
 | country-details-restful-client              | http://localhost:8100, http://localhost:8101,...| 
+| ribbon-feign-client                         | http://localhost:8088                           | 
