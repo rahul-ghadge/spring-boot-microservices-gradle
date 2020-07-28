@@ -41,13 +41,13 @@ public class CommonCountryController {
     private WebClient.Builder webClientBuilder;
 
 
-    
+
     @SuppressWarnings("unchecked")
 	@GetMapping(value = {"/", "/{country}"}, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<CountryDetails>> getCountryData(@PathVariable(required = false) String country) {
 
         if (StringUtils.isEmpty(country))
-            country = "bharat";
+            country = "india";
 
         logger.info("Getting country details for " + country);
         final String countryName = country;
@@ -60,13 +60,13 @@ public class CommonCountryController {
 
 
         if (!CollectionUtils.isEmpty(countryDetails)) {
-        	
-        	countryDetails.forEach(map -> 
+
+        	countryDetails.forEach(map ->
             		map.keySet().stream()
             		.filter(key -> countryName.equalsIgnoreCase((String) map.get("name")))
              		.filter(key -> key.equals("currencies"))
              		.filter(key -> !CollectionUtils.isEmpty((Collection<?>) (map.get("currencies"))))
-             		.forEach(key -> 
+             		.forEach(key ->
              		countryDetailsResponse.addAll(
              				getCountryDetailsUsingWebClient(
              						((List<Map<String, Object>>) map.get(key)).get(0).get("code").toString())
@@ -75,36 +75,36 @@ public class CommonCountryController {
            		 );
 
 			countryDetails.stream()
-			.filter(map -> countryName.equalsIgnoreCase((String) map.get("name")))
-			.forEach(map -> countryDetailsList.add(new CountryDetails(
+					.filter(map -> countryName.equalsIgnoreCase((String) map.get("name")))
+					.forEach(map -> countryDetailsList.add(new CountryDetails(
 							map.get("name").toString(),
 							map.get("capital").toString(),
 							map.get("region").toString(),
 							map.get("subregion").toString(),
-							Long.valueOf(map.get("population").toString()),
+							Long.parseLong((String) map.get("population")),
 							""+ map.get("description"),
 							(List<CountryCurrency>) map.get("currencies"),
 							200,
 							"Country details fetched successfully"
-							)));
-            }
-        logger.info("Final response from common country client :: {}", countryDetailsResponse);
+					)));
+		}
+		logger.info("Final response from common country client :: {}", countryDetailsResponse);
 
 		return ResponseEntity.ok(countryDetailsList);
     }
 
-    
-    
+
+
     @SuppressWarnings("unchecked")
 //     Circuit breaker
     @HystrixCommand(fallbackMethod = "getCountryCurrencyFallback", //ignoreExceptions = { RuntimeException.class },
             commandProperties = {
                     @HystrixProperty(name = HystrixPropertiesManager.EXECUTION_ISOLATION_THREAD_TIMEOUT_IN_MILLISECONDS, value = "2000"),
 					@HystrixProperty(name = HystrixPropertiesManager.EXECUTION_TIMEOUT_ENABLED, value = "true")
-    })
+			})
 	public List<Map<String, Object>> getCountryDetailsUsingWebClient(String code) {
 
-		return  webClientBuilder.build().get()
+    	return  webClientBuilder.build().get()
 				.uri(COUNTRY_CURRENCY_API + code)
 				.retrieve()
 				.bodyToMono(List.class)
@@ -118,7 +118,7 @@ public class CommonCountryController {
 		    commandProperties = {
 					@HystrixProperty(name = HystrixPropertiesManager.EXECUTION_ISOLATION_THREAD_TIMEOUT_IN_MILLISECONDS, value = "2000"),
 					@HystrixProperty(name = HystrixPropertiesManager.EXECUTION_TIMEOUT_ENABLED, value = "true")
-	})
+			})
 	public List<Map<String, Object>> getCountryDetailsUsingRestTemplate(String country) {
         return restTemplate
                 .getForObject(COUNTRY_DETAILS_API + country, List.class);
@@ -127,18 +127,18 @@ public class CommonCountryController {
 //                .getBody();
     }
 
-    
+
     public List<Map<String, Object>> getCountryDetailsFallback(String country) {
 		Map<String, Object> fallbackMap = new HashMap<>();
 		fallbackMap.put("message", "Something wrong happened...!");
-    	return Arrays.asList(fallbackMap);
+    	return Collections.singletonList(fallbackMap);
     }
 
 
 	public List<Map<String, Object>> getCountryCurrencyFallback(String code) {
 		Map<String, Object> fallbackMap = new HashMap<>();
 		fallbackMap.put("message", "Something wrong happened...!");
-		return Arrays.asList(fallbackMap);
+		return Collections.singletonList(fallbackMap);
 	}
-    
+
 }

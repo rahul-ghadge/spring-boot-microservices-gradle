@@ -5,4 +5,5 @@ include 'country-details-restful-client'
 include 'common-model'
 include 'country-currency-webclient-client'
 include 'common-country-client'
+include 'ribbon-feign-client'
 
