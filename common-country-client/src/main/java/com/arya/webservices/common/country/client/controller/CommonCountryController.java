@@ -72,24 +72,23 @@ public class CommonCountryController {
              						((List<Map<String, Object>>) map.get(key)).get(0).get("code").toString())
              				)
 					)
-           		 );        	
+           		 );
+
+			countryDetails.stream()
+			.filter(map -> countryName.equalsIgnoreCase((String) map.get("name")))
+			.forEach(map -> countryDetailsList.add(new CountryDetails(
+							map.get("name").toString(),
+							map.get("capital").toString(),
+							map.get("region").toString(),
+							map.get("subregion").toString(),
+							Long.valueOf(map.get("population").toString()),
+							""+ map.get("description"),
+							(List<CountryCurrency>) map.get("currencies"),
+							200,
+							"Country details fetched successfully"
+							)));
             }
         logger.info("Final response from common country client :: {}", countryDetailsResponse);
-      	
-        
-        countryDetails.stream()
-		.filter(map -> countryName.equalsIgnoreCase((String) map.get("name")))        
-        .forEach(map -> countryDetailsList.add(new CountryDetails(
-    					map.get("name").toString(),
-    					map.get("capital").toString(),
-    					map.get("region").toString(),
-    					map.get("subregion").toString(),
-    					Long.valueOf(map.get("population").toString()),
-    					""+ map.get("description"),
-    					(List<CountryCurrency>) map.get("currencies"),
-    					200,
-    					"Country details fetched successfully"
-    					)));
 
 		return ResponseEntity.ok(countryDetailsList);
     }
@@ -113,7 +112,6 @@ public class CommonCountryController {
     }
 
 
-    
     @SuppressWarnings("unchecked")
 //  Circuit breaker
 	@HystrixCommand(fallbackMethod = "getCountryDetailsFallback", //ignoreExceptions = { RuntimeException.class },
@@ -128,18 +126,18 @@ public class CommonCountryController {
 //                        new ParameterizedTypeReference<String>() {}, country)
 //                .getBody();
     }
-    
+
     
     public List<Map<String, Object>> getCountryDetailsFallback(String country) {
 		Map<String, Object> fallbackMap = new HashMap<>();
-		fallbackMap.put("message", "Something happened wrong...!");
+		fallbackMap.put("message", "Something wrong happened...!");
     	return Arrays.asList(fallbackMap);
     }
 
 
 	public List<Map<String, Object>> getCountryCurrencyFallback(String code) {
 		Map<String, Object> fallbackMap = new HashMap<>();
-		fallbackMap.put("message", "Something happened wrong...!");
+		fallbackMap.put("message", "Something wrong happened...!");
 		return Arrays.asList(fallbackMap);
 	}
     
