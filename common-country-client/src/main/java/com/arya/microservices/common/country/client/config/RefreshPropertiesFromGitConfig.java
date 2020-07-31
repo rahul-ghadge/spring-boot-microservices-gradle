@@ -1,4 +1,4 @@
-package com.arya.webservices.common.country.client.config;
+package com.arya.microservices.common.country.client.config;
 
 
 import org.slf4j.Logger;

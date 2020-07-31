@@ -1,4 +1,4 @@
-package com.arya.webservices.common.country.client;
+package com.arya.microservices.common.country.client;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

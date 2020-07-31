@@ -25,3 +25,7 @@ dependencies {
 
     compile project(':common-model')
 }
+
+test {
+    useJUnitPlatform()
+}

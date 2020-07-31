@@ -1,4 +1,4 @@
-package com.arya.webservices.common.country.client.controller;
+package com.arya.microservices.common.country.client.controller;
 
 
 import com.arya.microservices.common.model.CountryCurrency;
@@ -81,7 +81,7 @@ public class CommonCountryController {
 							map.get("capital").toString(),
 							map.get("region").toString(),
 							map.get("subregion").toString(),
-							Long.parseLong((String) map.get("population")),
+							Long.parseLong(""+ map.get("population")),
 							""+ map.get("description"),
 							(List<CountryCurrency>) map.get("currencies"),
 							200,
