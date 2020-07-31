@@ -16,7 +16,7 @@ Here we will learn the basics of Microservices from scratch and will understand 
 - You will learn how to implement Circuit breaker for fault tolerance using **Hystrix** 
 - Consume Third party API using **RestTemplate** and **WebClient**
 - **Load Balance** using **Ribbon** for RestTemplate and WebClient
-- You will learn declarative web service HTTP client with the help of *Feign*
+- You will learn declarative web service HTTP client with the help of **Feign**
 - You will be able to consume and communicate other RESTful web services using **Ribbon** and **Feign**
 - You will understand how to monitor RESTful Services with **Spring Boot Actuator**
 - You will understand the best practices in designing RESTful web services

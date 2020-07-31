@@ -6,17 +6,17 @@ spring:
     config:
       uri: http://localhost:8888
 
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*"
-
   active:
     profiles: default
 
 server:
   port: 8088
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 eureka:
   instance:

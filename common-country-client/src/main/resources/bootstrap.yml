@@ -2,23 +2,22 @@ spring:
   application:
     name: common-country-client
 
-
-  
   cloud:
     config:
       uri: http://localhost:8888
-
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: "*"
 
   active:
     profiles: default
 
 server:
   port: 8090
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
 eureka:
   instance:
