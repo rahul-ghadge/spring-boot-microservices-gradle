@@ -7,13 +7,13 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 
 
-@SpringBootTest(webEnvironment= WebEnvironment.DEFINED_PORT)
+@SpringBootTest(webEnvironment= WebEnvironment.RANDOM_PORT)
 public class CommonCountryClientApplicationTest {
 
     @LocalServerPort
-    int port;
+    public int port;
 
-    @DisplayName("Test Application context")
+    @DisplayName("CommonCountryClientApplication - Test Application context")
     @Test
     public void applicationContextLoaded() {
     }

@@ -35,12 +35,12 @@ class CommonCountryControllerTest extends CommonCountryClientApplicationTest {
     @Value("classpath:data/response.json")
     Resource resourceFile;
 
-
-    @DisplayName("Test country data by RestTemplate and WebClient")
+    @SuppressWarnings("unchecked")
+    @DisplayName("CommonCountryController - Test country data by RestTemplate and WebClient")
     @Test
     void getCountryData() throws Exception {
 
-        List mockList = new ObjectMapper().readValue(resourceFile.getInputStream(), List.class);
+        List<Map<String, Object>> mockList = new ObjectMapper().readValue(resourceFile.getInputStream(), List.class);
 
         when(restTemplate.getForObject(
                 anyString(),
