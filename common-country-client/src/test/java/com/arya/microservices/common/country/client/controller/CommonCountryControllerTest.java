@@ -35,7 +35,7 @@ class CommonCountryControllerTest extends CommonCountryClientApplicationTest {
     @Value("classpath:data/response.json")
     Resource resourceFile;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @DisplayName("CommonCountryController - Test country data by RestTemplate and WebClient")
     @Test
     void getCountryData() throws Exception {
