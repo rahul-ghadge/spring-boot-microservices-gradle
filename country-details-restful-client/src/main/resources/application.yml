@@ -3,7 +3,7 @@ spring:
     name: country-details-restful-client
 
 server:
-  port: 8100
+  port: ${PORT:0}   # 8100
 
 
 
