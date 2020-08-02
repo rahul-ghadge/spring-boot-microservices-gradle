@@ -24,16 +24,16 @@ import static org.mockito.Mockito.when;
 class CommonCountryControllerTest extends CommonCountryClientApplicationTest {
 
     @InjectMocks
-    CommonCountryController controller;
+    private CommonCountryController controller;
 
     @Mock
-    RestTemplate restTemplate;
+    private RestTemplate restTemplate;
 
     @Mock
-    WebClient.Builder webClientBuilder;
+    private WebClient.Builder webClientBuilder;
 
     @Value("classpath:data/response.json")
-    Resource resourceFile;
+    private Resource resourceFile;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @DisplayName("CommonCountryController - Test country data by RestTemplate and WebClient")

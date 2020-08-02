@@ -36,7 +36,7 @@ class CountryCurrencyControllerTest extends CountryCurrencyWebClientApplicationT
     Resource resourceFile;
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    @DisplayName("CountryCurrencyController - Test country data by RestTemplate and WebClient")
+    @DisplayName("CountryCurrencyController - Test country data by WebClient")
     @Test
     void getCountryData() throws IOException {
 
