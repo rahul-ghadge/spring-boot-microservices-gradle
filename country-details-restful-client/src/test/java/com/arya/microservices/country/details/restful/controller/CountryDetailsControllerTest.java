@@ -37,7 +37,7 @@ class CountryDetailsControllerTest extends CountryDetailsRestfulClientApplicatio
     @SuppressWarnings("unchecked")
     @DisplayName("CountryDetailsController - Test country data by RestTemplate")
     @Test
-    void getCountryData() throws IOException {
+    public void getCountryData() throws IOException {
 
         List<Map<String, Object>> mockList = (List<Map<String, Object>>) new ObjectMapper().readValue(resourceFile.getInputStream(), List.class);
 
