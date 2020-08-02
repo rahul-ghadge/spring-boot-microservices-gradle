@@ -14,7 +14,7 @@ spring:
       enabled: true
 
 server:
-  port: 8090
+  port: ${PORT:0}   # 8090
 
 
 management:
