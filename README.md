@@ -40,12 +40,17 @@ Here we will learn the basics of Microservices from scratch and will understand 
 | common-country-client                       | 8090                 |    |
 | common-model                                |                      |    |
 | country-config-server                       | 8888 (**optional**)  |    |
-| country-currency-webclient-client           | 8200, 8201,...       |    |
-| country-details-restful-client              | 8100, 8101,...       |    |
+| country-currency-webclient-client           | Dynamic random port (or 8200, 8201,..)       |    |
+| country-details-restful-client              | Dynamic random port (or 8100, 8101,..)       |    |
 | eureka-naming-server                        | 8761                 |    |
 | ribbon-feign-client                         | 8088                 |    |
 > You can dynamically run multiple instances for ``restful-client`` and ``webclient-client`` applications by changing ports as shown above  
 > Each instance will get registered under ``Eureka Server`` and urls will be mapped respectively.
+
+
+## Build with Gradle
+**GOTO > ~/absolute-path-to-directory/spring-boot-microservices-gradle**
+> **```gradle clean build```** it will build all sub-modules from parent module
 
 
 ## Order to Run the Applications
@@ -64,6 +69,6 @@ Here we will learn the basics of Microservices from scratch and will understand 
 | eureka-naming-server                        | http://localhost:8761                           | 
 | common-country-client                       | http://localhost:8090/india                     | 
 | country-config-server                       | http://localhost:8888                           | 
-| country-currency-webclient-client           | http://localhost:8200, http://localhost:8201,...| 
-| country-details-restful-client              | http://localhost:8100, http://localhost:8101,...| 
+| country-currency-webclient-client           | http://localhost:{random.port or 8200}, http://localhost:{random.port or 8201},...| 
+| country-details-restful-client              | http://localhost:{random.port or 8100}, http://localhost:{random.port or8101},...| 
 | ribbon-feign-client                         | http://localhost:8088                           | 

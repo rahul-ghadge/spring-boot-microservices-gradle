@@ -3,7 +3,7 @@ spring:
     name: country-currency-webclient-client
 
 server:
-  port: ${PORT:0}   # 8200
+  port: ${PORT:0}   # 8200    # 8201   # 8202
 
 
 
