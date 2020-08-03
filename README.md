@@ -52,8 +52,10 @@ Here we will learn the basics of Microservices from scratch and will understand 
 ## Build with Gradle
 _GOTO >_ **~/absolute-path-to-directory/spring-boot-microservices-gradle/**  
 and try below command in terminal
-> **```gradle clean build```** it will build all sub-modules from parent module
+> **```gradle clean build```** it will build all sub-modules from parent module  
 
+_If in case face any issue while building modules because of test cases, then try build with disabling test cases_
+> **```gradle clean build -x test```**
 
 ## Order to Run the Applications
 1. **eureka-naming-server**
