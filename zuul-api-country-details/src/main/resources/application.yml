@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: zuul-api-country-details
+
+  devtools:
+    restart:
+      enabled: true
+
+server:
+  port: 8090
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          #"*"
+          - beans
+          - health
+          - routes
+          - httptrace
