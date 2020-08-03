@@ -35,21 +35,22 @@ Here we will learn the basics of Microservices from scratch and will understand 
 
 ## Modules / Sub-modules
 | Name                                        | Port                 | Description  |
-| ------------------------------------------- |:-------------:       | ---------:|
+| ------------------------------------------- |:-------------       | ---------:|
 | spring-boot-microservices-gradle(root)      | (Root/Parent module) |    |
-| common-country-client                       | 8090                 |    |
+| common-country-client                       | 8300, 8301,.. **(or dynamic random port)**  |    |
 | common-model                                |                      |    |
 | country-config-server                       | 8888 (**optional**)  |    |
-| country-currency-webclient-client           | Dynamic random port (or 8200, 8201,..)       |    |
-| country-details-restful-client              | Dynamic random port (or 8100, 8101,..)       |    |
+| country-currency-webclient-client           | 8200, 8201,.. **(or dynamic random port)**  |    |
+| country-details-restful-client              | 8100, 8101,.. **(or dynamic random port)**  |    |
 | eureka-naming-server                        | 8761                 |    |
-| ribbon-feign-client                         | 8088                 |    |
+| ribbon-feign-client                         | 8000                 |    |
 > You can dynamically run multiple instances for ``restful-client`` and ``webclient-client`` applications by changing ports as shown above  
 > Each instance will get registered under ``Eureka Server`` and urls will be mapped respectively.
 
 
 ## Build with Gradle
-**GOTO > ~/absolute-path-to-directory/spring-boot-microservices-gradle**
+_GOTO >_ **~/absolute-path-to-directory/spring-boot-microservices-gradle/**  
+and try below command in terminal
 > **```gradle clean build```** it will build all sub-modules from parent module
 
 
@@ -67,8 +68,8 @@ Here we will learn the basics of Microservices from scratch and will understand 
 | Name                                        | URL                                             | 
 | ------------------------------------------- |:---------------------------------------------   | 
 | eureka-naming-server                        | http://localhost:8761                           | 
-| common-country-client                       | http://localhost:8090/india                     | 
+| common-country-client                       | http://localhost:8300/india or **{random.port}**                    | 
 | country-config-server                       | http://localhost:8888                           | 
-| country-currency-webclient-client           | http://localhost:{random.port or 8200}, http://localhost:{random.port or 8201},...| 
-| country-details-restful-client              | http://localhost:{random.port or 8100}, http://localhost:{random.port or8101},...| 
-| ribbon-feign-client                         | http://localhost:8088                           | 
+| country-currency-webclient-client           | http://localhost:8200 or **{random.port}**, http://localhost:8201 or **{random.port}**,...| 
+| country-details-restful-client              | http://localhost:8100 or **{random.port}**, http://localhost:8101 or **{random.port}**,...| 
+| ribbon-feign-client                         | http://localhost:8000                           | 
