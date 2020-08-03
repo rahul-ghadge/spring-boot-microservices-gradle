@@ -44,6 +44,7 @@ Here we will learn the basics of Microservices from scratch and will understand 
 | country-details-restful-client              | 8100, 8101,.. **(or dynamic random port)**  |    |
 | eureka-naming-server                        | 8761                 |    |
 | ribbon-feign-client                         | 8000                 |    |
+| zuul-api-country-details                    | 8090                 |    |
 > You can dynamically run multiple instances for ``restful-client`` and ``webclient-client`` applications by changing ports as shown above  
 > Each instance will get registered under ``Eureka Server`` and urls will be mapped respectively.
 
@@ -61,15 +62,17 @@ and try below command in terminal
 4. **country-details-restful-client**
 5. **common-country-client**
 6. **ribbon-feign-client**
+7. **zuul-api-country-details**
 > Under each module you will find ``*Aplication.java`` class, run ``main()`` method from that class
 
 
 ## API Endpoints
-| Name                                        | URL                                             | 
-| ------------------------------------------- |:---------------------------------------------   | 
-| eureka-naming-server                        | http://localhost:8761                           | 
-| common-country-client                       | http://localhost:8300/india or **{random.port}**                    | 
-| country-config-server                       | http://localhost:8888                           | 
+| Name                                        | URL                                               | 
+| ------------------------------------------- |:------------------------------------------------  | 
+| eureka-naming-server                        | http://localhost:8761                             | 
+| common-country-client                       | http://localhost:8300/india or **{random.port}**  | 
+| country-config-server                       | http://localhost:8888                             | 
 | country-currency-webclient-client           | http://localhost:8200 or **{random.port}**, http://localhost:8201 or **{random.port}**,...| 
 | country-details-restful-client              | http://localhost:8100 or **{random.port}**, http://localhost:8101 or **{random.port}**,...| 
-| ribbon-feign-client                         | http://localhost:8000                           | 
+| ribbon-feign-client                         | http://localhost:8000                             | 
+| zuul-api-country-details                    | http://localhost:8090/common-country-client/india | 
